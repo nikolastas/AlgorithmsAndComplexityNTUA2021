@@ -1,11 +1,11 @@
 import numpy as np
 import array
 
-d=1
+d=4
 S=1
 temp=1
 change=0
-a=[2,2,2,4,4]
+a=[2,2,2,4,4,5,6,7,8,8,8,8,8,8,8,8,8,8,8,8]
 for i  in range(0,len(a)-1):
    print("compare1= ",a[i] ,"compare2= ",a[i+1])
    #print((a[i] > a[i+1]+d),(a[i] <= a[i+1]+d))
@@ -23,7 +23,7 @@ for i  in range(0,len(a)-1):
            change=0
            print("2b")"""
         
-   if temp>d:
+   if temp>d*S:
         S+=1
         print("3")
 
