@@ -7,7 +7,8 @@ def make_s(s,a):
             if (j-i>0):
                 s.append(j-i)
 make_s(s,a)
-print(s)                
+print("s=",s)
+              
 
 def foo(l):
     temp=-1
