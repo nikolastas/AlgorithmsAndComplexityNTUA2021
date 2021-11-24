@@ -96,6 +96,16 @@ void goThroughPortal(vector<int> current_state,vector<int> portals,unordered_map
     states.emplace(k,cost);
     //cout<<"end portal"<<endl;
 }
+
+void makefinal(vectr<int> initial, vector<int> final, vector<int>& differences){
+    int n=initial.size();
+    for(  int i=0; i<n;i++){
+        if(initial[i]!=final[i]){
+            differences.push_back(initia[i]);
+
+        }
+    }
+}
 //--------------------------------------------------------------------------------------------
 void swap1(int* a, int* b)
 {
@@ -122,6 +132,7 @@ int partition (vector<vector<int>> &arr, int low, int high)
 	swap1(&arr[i + 1][2], &arr[high][2]);
 	return (i + 1);
 }
+
 
 /* The main function that implements QuickSort
 arr[] --> Array to be sorted,
@@ -168,66 +179,76 @@ int main(int argc, char *argv[]){
         {cout<<"initial state is ";
         printvector(initial_state);
         cout<<endl;}
-    Key newk;
-    newk.first=initial_state;
-    unordered_map<Key,int,KeyHash,KeyEqual> states; 
-    states.emplace(newk,0);
-    
-    for (int i=0;i<m;i++){
-        
-        myfile>>temp1>>temp2>>temp3;
-        
-        portals[i].push_back(temp1);
-        portals[i].push_back(temp2);
-        portals[i].push_back(temp3);
-        
-    
-        
-        
-    }
-    if(print)
-        cout<<"ended inserting the portlas data"<<endl;
-    
-    
-    
-    if(print)
-        cout<<"start quicksort"<<endl;
-    quickSort(portals,0,m-1);
-    
-
-    if(print)
-        cout<<"ended sorting portals"<<endl;
-    vector<int> temp;
 
     vector<int> final_state(n);
     generate( final_state.begin(), final_state.end(), [i=1]{
          static int i=1;
          return i++;
      });
-    Key finalk;
-    finalk.first=final_state;
-    if(print)
-        printvector(final_state);
-    for(int j=m-1;j<=0;j--){
-        cout<<"j="<<j<<endl;
-        for (auto i = states.begin(); i != states.end(); i++){
-            
-            goThroughPortal(i->first.first,portals[j],states);
-            cout<<"for step in portal: "<<portals[j][0]<<portals[j][1]<<portals[j][2];
-            cout<<"there are that states";
-            printmap2(states);
-            cout<<endl;
-            cout<<"next step"<<endl;           
-            if(states.find(finalk)!=states.end()){
-                cout<<"found it at step"<<portals[j][0]<<portals[j][1]<<portals[j][2];
-                
-                break;
-            }
-        }
+    vector<int> diff;
+    makefinal(initial_state,final_state,diff);
+    printvector(diff);
+
+
+
+    // Key newk;
+
+    // newk.first=initial_state;
+    
+    // unordered_map<Key,int,KeyHash,KeyEqual> states; 
+    // states.emplace(newk,0);
+    
+    // for (int i=0;i<m;i++){
         
-    }
-    if(print)
-        cout<<"ended goThroughPartals"<<endl;
+    //     myfile>>temp1>>temp2>>temp3;
+        
+    //     portals[i].push_back(temp1);
+    //     portals[i].push_back(temp2);
+    //     portals[i].push_back(temp3);
+        
+    
+        
+        
+    // }
+    // if(print)
+    //     cout<<"ended inserting the portlas data"<<endl;
+    
+    
+    
+    // if(print)
+    //     cout<<"start quicksort"<<endl;
+    // quickSort(portals,0,m-1);
+    
+
+    // if(print)
+    //     cout<<"ended sorting portals"<<endl;
+    // vector<int> temp;
+
+    
+    // Key finalk;
+    // finalk.first=final_state;
+    // if(print)
+    //     printvector(final_state);
+    // for(int j=m-1;j<=0;j--){
+    //     cout<<"j="<<j<<endl;
+    //     for (auto i = states.begin(); i != states.end(); i++){
+            
+    //         goThroughPortal(i->first.first,portals[j],states);
+    //         cout<<"for step in portal: "<<portals[j][0]<<portals[j][1]<<portals[j][2];
+    //         cout<<"there are that states";
+    //         printmap2(states);
+    //         cout<<endl;
+    //         cout<<"next step"<<endl;           
+    //         if(states.find(finalk)!=states.end()){
+    //             cout<<"found it at step"<<portals[j][0]<<portals[j][1]<<portals[j][2];
+                
+    //             break;
+    //         }
+    //     }
+        
+    // }
+    // if(print)
+    //     cout<<"ended goThroughPartals"<<endl;
     
     
 
