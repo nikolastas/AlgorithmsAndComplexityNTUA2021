@@ -9,6 +9,9 @@
 
 
 
+
+
+//------------------------------------------------------------------------------------------------------------------
 namespace std {
 struct Key {
     vector<int> first;
@@ -33,7 +36,7 @@ struct KeyHash{
 };
 }
 using namespace std;
-
+//-----------------------------------------------------------------------------------
 int max(int a, int b){
     if(a>b){
         return b;
@@ -93,7 +96,52 @@ void goThroughPortal(vector<int> current_state,vector<int> portals,unordered_map
     states.emplace(k,cost);
     //cout<<"end portal"<<endl;
 }
+//--------------------------------------------------------------------------------------------
+void swap1(int* a, int* b)
+{
+	int t = *a;
+	*a = *b;
+	*b = t;
+}
 
+int partition (vector<vector<int>> &arr, int low, int high)
+{   
+    
+	int pivot = arr[high][2]; // pivot
+	int i = (low - 1); // Index of smaller element and indicates the right position of pivot found so far
+    
+	for (int j = low; j <= high - 1; j++)
+	{
+		// If current element is smaller than the pivot
+		if (arr[j][2] > pivot)
+		{
+			i++; // increment index of smaller element
+			swap1(&arr[i][2], &arr[j][2]);
+		}
+	}
+	swap1(&arr[i + 1][2], &arr[high][2]);
+	return (i + 1);
+}
+
+/* The main function that implements QuickSort
+arr[] --> Array to be sorted,
+low --> Starting index,
+high --> Ending index */
+void quickSort(vector<vector<int>>& arr, int low, int high)
+{
+	if (low < high)
+	{
+		/* pi is partitioning index, arr[p] is now
+		at right place */
+        
+		int pi = partition(arr, low, high);
+        
+		// Separately sort elements before
+		// partition and after partition
+		quickSort(arr, low, pi - 1);
+		quickSort(arr, pi + 1, high);
+	}
+}
 int main(int argc, char *argv[]){
 
 
@@ -124,11 +172,11 @@ int main(int argc, char *argv[]){
     newk.first=initial_state;
     unordered_map<Key,int,KeyHash,KeyEqual> states; 
     states.emplace(newk,0);
-    int k=0;
+    
     for (int i=0;i<m;i++){
         
         myfile>>temp1>>temp2>>temp3;
-        k++;
+        
         portals[i].push_back(temp1);
         portals[i].push_back(temp2);
         portals[i].push_back(temp3);
@@ -140,28 +188,50 @@ int main(int argc, char *argv[]){
     if(print)
         cout<<"ended inserting the portlas data"<<endl;
     
-    vector<int> temp;
-    for(int j=0;j<m;j++){
-        
-        for (auto i = states.begin(); i != states.end(); i++){
-            
-            goThroughPortal(i->first.first,portals[j],states);
-            printmap2(states);
-        }
-        
-    }
+    
+    
     if(print)
-        cout<<"ended goThroughPartals"<<endl;
+        cout<<"start quicksort"<<endl;
+    quickSort(portals,0,m-1);
+    
+
+    if(print)
+        cout<<"ended sorting portals"<<endl;
+    vector<int> temp;
+
     vector<int> final_state(n);
     generate( final_state.begin(), final_state.end(), [i=1]{
          static int i=1;
          return i++;
      });
-     printvector(final_state);
+    Key finalk;
+    finalk.first=final_state;
+    if(print)
+        printvector(final_state);
+    for(int j=m-1;j<=0;j--){
+        cout<<"j="<<j<<endl;
+        for (auto i = states.begin(); i != states.end(); i++){
+            
+            goThroughPortal(i->first.first,portals[j],states);
+            cout<<"for step in portal: "<<portals[j][0]<<portals[j][1]<<portals[j][2];
+            cout<<"there are that states";
+            printmap2(states);
+            cout<<endl;
+            cout<<"next step"<<endl;           
+            if(states.find(finalk)!=states.end()){
+                cout<<"found it at step"<<portals[j][0]<<portals[j][1]<<portals[j][2];
+                
+                break;
+            }
+        }
+        
+    }
+    if(print)
+        cout<<"ended goThroughPartals"<<endl;
+    
+    
 
-    //if(states.find(final_state)!=states.end()){
-    //     cout<<states[final_state];
-    // }
+    
     
     
 }
