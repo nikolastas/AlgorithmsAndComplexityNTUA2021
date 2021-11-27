@@ -7,6 +7,9 @@
 #include <set>
 #include <unordered_map>
 #include <tuple>
+#include <bits/stdc++.h>
+
+
 using namespace std;
 
 void printvector(vector<int> pair){
@@ -16,83 +19,96 @@ void printvector(vector<int> pair){
     cout<<endl;
 }
 
-namespace N {
- 
-typedef std::tuple<int,int> key_t;
- 
-struct key_hash : public std::unary_function<key_t, std::size_t>
-{
-   std::size_t operator()(const key_t& k) const
-   {
-      return std::get<0>(k) ^ std::get<1>(k);
-   }
-};
- 
-struct key_equal : public std::binary_function<key_t, key_t, bool>
-{
-   bool operator()(const key_t& v0, const key_t& v1) const
-   {
-      return (
-               std::get<0>(v0) == std::get<0>(v1) &&
-               std::get<1>(v0) == std::get<1>(v1) 
-             );
-   }
-};
- 
-
- 
-typedef std::unordered_map<const key_t,int,key_hash,key_equal> map_t;
- 
-}
-
-
-template<class TupType, size_t... I>
-void print(const TupType& _tup, std::index_sequence<I...>)
-{
+// auto next_arr(vector<int> arr,int i){
+//     auto it = arr.begin()+i+1;
+//     while(it==-2){
+//         it++;
+//     } 
+//     return it;
+// }
+// auto prev_arr(vector<int> arr,int i){
+//     auto it = arr.begin()+i-1;
+//     while(it==-2){
+//         it--;
+//     } 
+//     return it;
+// }
+// int find_v(vector<int> arr, int i, int l){
     
-    (..., (std::cout << (I == 0? "" : ", ") << std::get<I>(_tup)));
-    
-}
-
-template<class... T>
-void print (const std::tuple<T...>& _tup)
-{
-    print(_tup, std::make_index_sequence<sizeof...(T)>());
-}
-
-int main(int argc, char *argv[]){
+//     int result=999999;
+//     for(int )
+//     if(result!=999999){
+//     return result;
+//     }
+//     return 999999;
+// }
+int main(/*int argc, char *argv[]*/){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     auto start = std::chrono::high_resolution_clock::now();
     int n, k;
     int sum=0;
     int p=0;
-    int temp;
+    int temp_k;
+    int temp_sum=0;
+    int result=999999;
     tuple<int,int> mytuple;
-    
+    int temp_result=0;
 
     
-    N::map_t mymap;
-    //scanf("%d %d",&n,&k);
-    fstream myfile(argv[1], ios_base::in);
     
-    myfile>>n>>k;
+    //scanf("%d %d",&n,&k);
+    //fstream myfile(argv[1], ios_base::in);
+    
+    //myfile>>n>>k;
+    cin>>n>>k;
     vector<int> arr(n+1);
     
     for(int i=0;i<n;i++){
         //scanf("%d",&arr[i]);
-        myfile>>arr[i];
+        //myfile>>arr[i];
+        cin>>arr[i];
     }
     
     auto after_reading = std::chrono::high_resolution_clock::now();
+    vector<vector<int>> sub_sums(n+1,vector<int>());
     
     for(int i=0;i<n;i++){
         sum=0;
+        //temp_result=999999;
         for(int j=i;j<n;j++){
             if(sum+arr[j]<=k){
             sum+=arr[j];
-            //mymap[std::make_tuple(i,j)]=sum;
+            sub_sums[i].push_back(sum);
+            
+            
+            // if(j+1<=n-1){
+            //     temp_k=k-sum;
+            //     if(temp_k==0){
+            //         cout<<" 0 remaing"<<j-i+1<<endl;
+            //         result=min(result,j-i+1);
+            //         break;
+            //     }
+            //     temp_sum=0;
+            //     temp_result=j-i;
+            //     for(int l=j+1;l<n;l++){
+            //         printf("[%d,%d,%d] i am missing %d so reamining=%d \n",i,j,l,temp_k,temp_sum);
+            //         temp_sum+=arr[l];
+            //         if(temp_sum==temp_k) {                     
+            //             temp_result+=l-j+1;
+            //             cout<<"temp="<<temp_result<<endl;
+            //             result=std::min(result,temp_result);
+                        
+            //             break;
+            //         }
+            //         else if (temp_sum>k){
+            //             break;
+            //         }
+            //     }
+            // }
 
             }
-            else if(sum>k) {
+            else  {
                 
                 break;
                 
@@ -100,18 +116,49 @@ int main(int argc, char *argv[]){
         }
        
     }
-    printf("mymap has size %d\n",mymap.size());
-    // for(auto itr = mymap.begin(); itr != mymap.end(); ++itr){
-    //     cout<<"[";
-    //     print(itr->first);
-    //     printf("] = %d\n",itr->second);
+    
+    bool check1=false;
+
+    for(int i=0;i<sub_sums.size();i++){
+        
+        for(int j=0;j<sub_sums[i].size();j++){
+            
+            for(int s=i+1;s<sub_sums.size();s++){
+                for(int l=0;l<sub_sums[s].size();l++){
+                    if(k==sub_sums[i][j]){
+                        result=min(result,j+1);
+                        check1=true;
+                        break;
+                    }
+                    else if((k-sub_sums[i][j])==sub_sums[s][l]){
+                        //printf("sum= %d , tempsum= %d, i=%d,j=%d,k=%d,l=%d\n",sum,temp_sum,i,j,s,l);
+                        result=min(result,j+1+l+1);
+                        check1=true;
+                        break;
+                        
+                    }
+                }
+                if(check1){
+                    break;
+                }
+            }
+        }
+    }
+    
+    if(result==999999){
+        result=-1;
+    }
+    cout<<result<<endl;
+    // for(int i=0;i<sub_sums.size();i++){
+    //     printvector(sub_sums[i]);
     // }
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(after_reading - start);
-    auto duration_end=std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    cout<<"after reading "<<duration.count() << endl;   
-    cout<<"duration "<<duration_end.count() << endl;
-    printf("n= %d , k=%d \n",n,k);
+    
+    // auto end = std::chrono::high_resolution_clock::now();
+    // auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(after_reading - start);
+    // auto duration_end=std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    // cout<<"after reading "<<duration.count() << endl;   
+    // cout<<"duration "<<duration_end.count() << endl;
+    // printf("n= %d , k=%d \n",n,k);
     //printf("[FINAL] (p1=%d, %d) and (p2=%d,%d) \n",p1,arr[p1],p2,arr[p2]);
     //printvector(arr);
 }
