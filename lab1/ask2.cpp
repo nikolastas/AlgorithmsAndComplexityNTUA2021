@@ -18,7 +18,9 @@ void printvector(vector<int> pair){
                 }
     cout<<endl;
 }
-
+int make2dto1d(int a, int b){
+    return (a+b)*(a+b+1)/2+b;
+}
 // auto next_arr(vector<int> arr,int i){
 //     auto it = arr.begin()+i+1;
 //     while(it==-2){
@@ -42,9 +44,9 @@ void printvector(vector<int> pair){
 //     }
 //     return 999999;
 // }
-int main(/*int argc, char *argv[]*/){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+int main(int argc, char *argv[]){
+    //ios_base::sync_with_stdio(false);
+    //cin.tie(NULL);
     auto start = std::chrono::high_resolution_clock::now();
     int n, k;
     int sum=0;
@@ -52,27 +54,29 @@ int main(/*int argc, char *argv[]*/){
     int temp_k;
     int temp_sum=0;
     int result=999999;
-    tuple<int,int> mytuple;
+    //tuple<int,int> mytuple;
     int temp_result=0;
 
     
     
     //scanf("%d %d",&n,&k);
-    //fstream myfile(argv[1], ios_base::in);
+    fstream myfile(argv[1], ios_base::in);
     
-    //myfile>>n>>k;
-    cin>>n>>k;
+    myfile>>n>>k;
+    //cin>>n>>k;
     vector<int> arr(n+1);
     
     for(int i=0;i<n;i++){
         //scanf("%d",&arr[i]);
-        //myfile>>arr[i];
-        cin>>arr[i];
+        myfile>>arr[i];
+        //cin>>arr[i];
     }
     
     auto after_reading = std::chrono::high_resolution_clock::now();
     vector<vector<int>> sub_sums(n+1,vector<int>());
-    
+    map<int,int> mymap;  
+    int maps_so_far=0;
+    int t=0;
     for(int i=0;i<n;i++){
         sum=0;
         //temp_result=999999;
@@ -80,7 +84,18 @@ int main(/*int argc, char *argv[]*/){
             if(sum+arr[j]<=k){
             sum+=arr[j];
             sub_sums[i].push_back(sum);
-            
+            if(i!=0){
+
+                while(t<=maps_so_far){
+                
+                auto const res=mymap.insert(pair<int,int>(make2dto1d(i,sum),j));
+                    if (!(res.second) && mymap[make2dto1d(i,sum)]>j) { 
+                        res.first->second = j; 
+                        
+                    }
+                t++;
+                }
+            }        
             
             // if(j+1<=n-1){
             //     temp_k=k-sum;
@@ -113,8 +128,9 @@ int main(/*int argc, char *argv[]*/){
                 break;
                 
             }
+
         }
-       
+       maps_so_far++;
     }
     
     bool check1=false;
@@ -122,26 +138,29 @@ int main(/*int argc, char *argv[]*/){
     for(int i=0;i<sub_sums.size();i++){
         
         for(int j=0;j<sub_sums[i].size();j++){
-            
-            for(int s=i+1;s<sub_sums.size();s++){
-                for(int l=0;l<sub_sums[s].size();l++){
-                    if(k==sub_sums[i][j]){
-                        result=min(result,j+1);
-                        check1=true;
-                        break;
-                    }
-                    else if((k-sub_sums[i][j])==sub_sums[s][l]){
-                        //printf("sum= %d , tempsum= %d, i=%d,j=%d,k=%d,l=%d\n",sum,temp_sum,i,j,s,l);
-                        result=min(result,j+1+l+1);
-                        check1=true;
-                        break;
+            // auto itr=mymap.find(make2dto1d(i,k-sub_sums[i][j]));
+            // if(itr!=mymap.end()){
+            //     result=min(result,itr->second);
+            // }
+            // for(int s=i+1;s<sub_sums.size();s++){
+            //     for(int l=0;l<sub_sums[s].size();l++){
+            //         if(k==sub_sums[i][j]){
+            //             result=min(result,j+1);
+            //             check1=true;
+            //             break;
+            //         }
+            //         else if((k-sub_sums[i][j])==sub_sums[s][l]){
+            //             //printf("sum= %d , tempsum= %d, i=%d,j=%d,k=%d,l=%d\n",sum,temp_sum,i,j,s,l);
+            //             result=min(result,j+1+l+1);
+            //             check1=true;
+            //             break;
                         
-                    }
-                }
-                if(check1){
-                    break;
-                }
-            }
+            //         }
+            //     }
+            //     if(check1){
+            //         break;
+            //     }
+            // }
         }
     }
     
@@ -153,11 +172,11 @@ int main(/*int argc, char *argv[]*/){
     //     printvector(sub_sums[i]);
     // }
     
-    // auto end = std::chrono::high_resolution_clock::now();
-    // auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(after_reading - start);
-    // auto duration_end=std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    // cout<<"after reading "<<duration.count() << endl;   
-    // cout<<"duration "<<duration_end.count() << endl;
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(after_reading - start);
+    auto duration_end=std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    cout<<"after reading "<<duration.count() << endl;   
+    cout<<"duration "<<duration_end.count() << endl;
     // printf("n= %d , k=%d \n",n,k);
     //printf("[FINAL] (p1=%d, %d) and (p2=%d,%d) \n",p1,arr[p1],p2,arr[p2]);
     //printvector(arr);
