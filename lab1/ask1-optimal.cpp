@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <algorithm>
-
+#include <bits/stdc++.h> 
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
@@ -149,24 +149,25 @@ void printvector(vector<int> pair){
     cout<<endl;
 }
 int main(/*int argc, char *argv[]*/){
-
+    ios_base::sync_with_stdio(false);  
+    cin.tie(NULL); 
     int n;
     //auto start = std::chrono::high_resolution_clock::now();
     //fstream myfile(argv[1], ios_base::in);
     
     
     //myfile>>n>>m;
-    //cin>>n>>m;
-    scanf("%d",&n);
-    scanf("%d",&m);
+    cin>>n>>m;
+    // scanf("%d",&n);
+    // scanf("%d",&m);
     vector<int> initial_state;
     
     int temp1,temp2,temp3;
     
 
     for (int i=0;i<n;i++){
-        //cin>>temp1;
-        scanf("%d",&temp1);
+       cin>>temp1;
+       // scanf("%d",&temp1);
         //myfile>>temp1;
         initial_state.push_back(temp1);
     }
@@ -175,9 +176,10 @@ int main(/*int argc, char *argv[]*/){
     vector<int> uniq;
     if((n <=100000) && (m<=100000)){
         for (int i=1;i<=m;i++){  
-            scanf("%d",&temp1);
-            scanf("%d",&temp2);
-            scanf("%d",&temp3); 
+            cin>>temp1>>temp2>>temp3;
+            // scanf("%d",&temp2);
+            // scanf("%d",&temp1);
+            // scanf("%d",&temp3); 
             portals[m-i].push_back(temp1);  
             portals[m-i].push_back(temp2);  
             portals[m-i].push_back(temp3);  
@@ -188,10 +190,10 @@ int main(/*int argc, char *argv[]*/){
     } 
     else{
         for (int i=1;i<=m;i++){  
-        scanf("%d",&temp1);
-        scanf("%d",&temp2);
-        scanf("%d",&temp3); 
-        //cin>>temp1>>temp2>>temp3;  
+        // scanf("%d",&temp1);
+        // scanf("%d",&temp2);
+        // scanf("%d",&temp3); 
+        cin>>temp1>>temp2>>temp3;  
         //myfile>>temp1>>temp2>>temp3;  
         portals[m-i].push_back(temp1);  
         portals[m-i].push_back(temp2);  
