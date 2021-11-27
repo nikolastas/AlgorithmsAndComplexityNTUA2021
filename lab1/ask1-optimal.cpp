@@ -11,12 +11,12 @@
 int m;
 struct Edge {
     int src, dest;
-    int weight;
+    
 };
 struct subset {
     int parent;
     int rank;
-    int min_cost;
+    
 };
 struct Graph {
     // V-> Number of vertices, E-> Number of edges
@@ -59,19 +59,19 @@ int find(struct subset subsets[], int i)
    
     return subsets[i].parent;
 }
-int find_and_fix_cost(struct subset subsets[], int i, int cost)
-{
-    // find root and make root as parent of i (path
-    // compression)
+// int find_and_fix_cost(struct subset subsets[], int i, int cost)
+// {
+//     // find root and make root as parent of i (path
+//     // compression)
     
-    if (subsets[i].parent != i){
-        //std::cout<<"recursize find!"<<std::endl;
-        subsets[i].parent= find(subsets, subsets[i].parent);
-    }
-    //std::cout<<"returned :)"<<std::endl;
-    subsets[subsets[i].parent].min_cost=min(subsets[subsets[i].parent].min_cost,cost);
-    return subsets[i].parent;
-}
+//     if (subsets[i].parent != i){
+//         //std::cout<<"recursize find!"<<std::endl;
+//         subsets[i].parent= find(subsets, subsets[i].parent);
+//     }
+//     //std::cout<<"returned :)"<<std::endl;
+//     subsets[subsets[i].parent].min_cost=min(subsets[subsets[i].parent].min_cost,cost);
+//     return subsets[i].parent;
+// }
 
 
 void Union(struct subset subsets[], int xroot, int yroot)
@@ -156,35 +156,28 @@ int main(/*int argc, char *argv[]*/){
     
     
     //myfile>>n>>m;
-    cin>>n>>m;
-
+    //cin>>n>>m;
+    scanf("%d",&n);
+    scanf("%d",&m);
     vector<int> initial_state;
     
     int temp1,temp2,temp3;
     
 
     for (int i=0;i<n;i++){
-        cin>>temp1;
+        //cin>>temp1;
+        scanf("%d",&temp1);
         //myfile>>temp1;
         initial_state.push_back(temp1);
-    }
-    //cout<<"initial complete";
-    //printvector(initial_state);
-    vector<int> check;
-    for(int i=0;i<n;i++){
-        if(initial_state[i]!=i+1){
-            
-            check.push_back(initial_state[i]);
-        }
     }
     
     vector<vector<int> > portals(m+1,vector<int>());
     vector<int> uniq;
     if((n <=100000) && (m<=100000)){
         for (int i=1;i<=m;i++){  
-          
-            cin>>temp1>>temp2>>temp3;  
-            //myfile>>temp1>>temp2>>temp3;  
+            scanf("%d",&temp1);
+            scanf("%d",&temp2);
+            scanf("%d",&temp3); 
             portals[m-i].push_back(temp1);  
             portals[m-i].push_back(temp2);  
             portals[m-i].push_back(temp3);  
@@ -195,9 +188,11 @@ int main(/*int argc, char *argv[]*/){
     } 
     else{
         for (int i=1;i<=m;i++){  
-          
+        scanf("%d",&temp1);
+        scanf("%d",&temp2);
+        scanf("%d",&temp3); 
         //cin>>temp1>>temp2>>temp3;  
-        myfile>>temp1>>temp2>>temp3;  
+        //myfile>>temp1>>temp2>>temp3;  
         portals[m-i].push_back(temp1);  
         portals[m-i].push_back(temp2);  
         portals[m-i].push_back(temp3);  
@@ -208,11 +203,9 @@ int main(/*int argc, char *argv[]*/){
     int low=0, high=m,l;
     int result=999999999;
     
-    sort(check.begin(),check.end());
-    
     bool check1=true;
-    struct Graph* graph = createGraph(n, m+1);
-    struct subset* subsets= (struct subset*)malloc(n * sizeof(struct subset));
+    struct Graph* graph = createGraph(n+1, m+1);
+    struct subset* subsets= (struct subset*)malloc(n * sizeof(struct subset)+1);
     std::vector<int> vec1;
     
     int lower_point_of_insert=0;
@@ -227,7 +220,7 @@ int main(/*int argc, char *argv[]*/){
             for (int i=0;i<n;i++){
                 subsets[initial_state[i]].parent=initial_state[i];
                 subsets[initial_state[i]].rank=0;
-                subsets[initial_state[i]].min_cost=9999999;
+                
             }
         }
         for (int i=lower_point_of_insert;i<m;i++){
@@ -235,70 +228,49 @@ int main(/*int argc, char *argv[]*/){
             temp1=portals[i][0];
             temp2=portals[i][1];
             temp3=portals[i][2];
-            
-                
-            //out<<"i= "<<i<<" "<<temp1<<" "<<temp2<<" "<<temp3<<endl;
             graph->edge[i].src = temp1;
             graph->edge[i].dest=temp2;
-            graph->edge[i].weight=temp3;
-
-            int x = find_and_fix_cost(subsets, graph->edge[i].src,graph->edge[i].weight);
-            //cout<<"2"<<endl;
-            int y = find_and_fix_cost(subsets, graph->edge[i].dest,graph->edge[i].weight);
-            //cout<<"3"<<endl;
+            int x = find(subsets, graph->edge[i].src);
+            int y = find(subsets, graph->edge[i].dest);
             Union(subsets, x, y);
-            //cout<<"src= "<<graph->edge[i].src<<" i= "<<i<<" dest= "<<graph->edge[i].dest<<endl;
             result=min(result,temp3);
         }
-            
-                
-        //cout<<" checkpoint0"<<endl;
-              
-        
+
             for(int i=0;i<=n-2;i++){
-                //cout<<"checking for "<<initial_state[i]<<" "<<i+1 <<endl;
                 if(initial_state[i]!=i+1){
-                    //cout<<"["<<i<<"]"<<"i am about to check"<<subsets[initial_state[i]].parent<<" "<<subsets[i+1].parent<<endl;
                     if(find(subsets,subsets[initial_state[i]].parent)!= find(subsets,subsets[i+1].parent) ){
                         lower_point_of_insert=m;
                         low=m+1;
-                        //cout<<"continue"<<endl;
-                        //cout<<find(subsets,subsets[initial_state[i]].parent)<<" [not3] "<<find(subsets,subsets[i+1].parent)<<endl;
                         check1=false;
                         break;
-                        //break;
                     }
                 }
                     
             }
-        //cout<<"so far check1= "<<check1<<endl;
             if(check1){
-                //cout<<"yes"<<result;
                 high=m-1;
                 if((low<=high )){
                     for (int i=0;i<n;i++){
                         subsets[initial_state[i]].parent=initial_state[i];
                         subsets[initial_state[i]].rank=0;
-                        subsets[initial_state[i]].min_cost=9999999;
+                        
 
                     }
                 lower_point_of_insert=0;
-                //cout<<"for the top again :("<<endl;
                 }
                     
             }
-            //cout<<" start cleaning:"<<endl;
-        
         check1=true;
         
         
             
-       // cout<<"finish "<<low<<" "<<high <<endl;
+       
     }
-    //cout<<low<<endl;
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    //cout<<duration.count() << endl;
+    
+    // auto stop = std::chrono::high_resolution_clock::now();
+    // auto duration=std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    // cout<<duration.count() << endl;
     cout<<portals[low-1][2]<<endl;
+    //printf("%d \n",portals[low-1][2]);
     
 }
