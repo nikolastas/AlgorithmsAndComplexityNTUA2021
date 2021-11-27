@@ -84,16 +84,23 @@ int main(int argc, char *argv[]){
             if(sum+arr[j]<=k){
             sum+=arr[j];
             sub_sums[i].push_back(sum);
+            t=0;
             if(i!=0){
 
                 while(t<=maps_so_far){
-                
-                auto const res=mymap.insert(pair<int,int>(make2dto1d(i,sum),j));
-                    if (!(res.second) && mymap[make2dto1d(i,sum)]>j) { 
-                        res.first->second = j; 
+                    auto it=mymap.find(make2dto1d(i,sum));
+                    if((it!=mymap.end() && it->second>j-i+1 )|| it==mymap.end()){
+                        
+                    
+                        auto const res=mymap.insert(pair<int,int>(make2dto1d(t,sum),j-i+1));
+                        printf("map[%d,%d]=%d \n",t,sum,j);
+                            if (!(res.second) && mymap[make2dto1d(i,sum)]>j-i+1) { 
+                                res.first->second = j; 
+                                
+                            }
                         
                     }
-                t++;
+                    t++;
                 }
             }        
             
@@ -138,10 +145,12 @@ int main(int argc, char *argv[]){
     for(int i=0;i<sub_sums.size();i++){
         
         for(int j=0;j<sub_sums[i].size();j++){
-            // auto itr=mymap.find(make2dto1d(i,k-sub_sums[i][j]));
-            // if(itr!=mymap.end()){
-            //     result=min(result,itr->second);
-            // }
+             printf("[%d,%d]=%d searching minimum elem for sum=%d\n",i,j,make2dto1d(i,k-sub_sums[i][j]),k-sub_sums[i][j]);
+             auto itr=mymap.find(make2dto1d(i,k-sub_sums[i][j]));
+             if(itr!=mymap.end()){
+                 printf("founf it with size %d\n",itr->second);
+                 result=min(result,itr->second);
+             }
             // for(int s=i+1;s<sub_sums.size();s++){
             //     for(int l=0;l<sub_sums[s].size();l++){
             //         if(k==sub_sums[i][j]){
