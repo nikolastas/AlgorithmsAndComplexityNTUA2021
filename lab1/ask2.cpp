@@ -114,8 +114,15 @@ int main(int argc, char *argv[]){
                     check_for_1_element=true;
                     break;
                 }
-                sub_sums[i].push_back(sum);
-                sub_sums[i].push_back(j);
+                long int v = val[sum];
+                long int len=j-i+1;
+                if(v>len || v==0){
+                    val[sum]=j-i+1;
+                    thesi[sum]=j;
+                }
+                
+                // sub_sums[i].push_back(sum);
+                // sub_sums[i].push_back(j);
                 // list1.push_front(sum);
                 // t++;
                 
@@ -150,25 +157,25 @@ int main(int argc, char *argv[]){
         if(check_for_1_element){
                 break;
             }
-        else {
-            int g=k;
-            for(long int k=0;k<sub_sums[i].size();k=k+2){
+        // else {
+        //     int g=k;
+        //     for(long int k=0;k<sub_sums[i].size();k=k+2){
                 
-                //int v = mymap[sub_sums[i][k]];
-                long int v = val[sub_sums[i][k]];
-                long int len=sub_sums[i][k+1]-i+1;
+        //         //int v = mymap[sub_sums[i][k]];
+        //         long int v = val[sub_sums[i][k]];
+        //         long int len=sub_sums[i][k+1]-i+1;
                 
-            //    printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],val[sub_sums[i][k]]);
-                if(v>len || v==0){
-                    // printf("[%d] new possible map value =%d\n",val[sub_sums[i][k]],sub_sums[i][k+1]);
-                    val[sub_sums[i][k]]=len;
-                    thesi[sub_sums[i][k]]=sub_sums[i][k+1];
-                    // mymap.replace(v,min(v,sub_sums[i][k+1]));
-                }
+        //     //    printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],val[sub_sums[i][k]]);
+        //         if(v>len || v==0){
+        //             // printf("[%d] new possible map value =%d\n",val[sub_sums[i][k]],sub_sums[i][k+1]);
+        //             val[sub_sums[i][k]]=len;
+        //             thesi[sub_sums[i][k]]=sub_sums[i][k+1];
+        //             // mymap.replace(v,min(v,sub_sums[i][k+1]));
+        //         }
                 
                 
-            }
-        }
+        //     }
+        // }
     }
     // auto pref = std::chrono::high_resolution_clock::now();
     // unordered_map<int,bool> uniq;
