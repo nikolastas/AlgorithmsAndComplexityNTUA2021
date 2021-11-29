@@ -77,9 +77,20 @@ int main(int argc, char *argv[]){
     
     // auto after_reading = std::chrono::high_resolution_clock::now();
     vector<vector<int>> sub_sums(2*n+1,vector<int>());
-    unordered_map<int,int> mymap;
-    mymap.reserve(k); // RESERVING SPACE BEFOREHAND
-    mymap.max_load_factor(0.25);
+    // unordered_map<int,int> mymap;
+    
+    int *val ;
+    
+    size_t size=sizeof(int)*k;
+    val = (int *) malloc(size);
+    
+    //memset(val,0,(k+1)*sizeof(int));
+    for(int i=0;i<=k;i++){
+        val[i]=0;
+    }
+    
+    // mymap.reserve(k); // RESERVING SPACE BEFOREHAND
+    // mymap.max_load_factor(0.25);
 
     bool check_for_1_element=false;
     
@@ -98,8 +109,11 @@ int main(int argc, char *argv[]){
             sub_sums[i].push_back(j-i+1);
             // list1.push_front(sum);
             // t++;
-            if(mymap[k-sum]){
-                result=min(result,mymap[k-sum]+j-i+1);
+            
+            if(val[k-sum]!=0){
+                //printf("searching for %d and found %d",k-sum,)
+                result=min(result,(val[k-sum]+j-i+1));
+                //printf("sum is %d and i=%d and j=%d ,new result value=%d+%d\n",sum,i,j,result,j-i+1);
             }
             
 
@@ -117,15 +131,17 @@ int main(int argc, char *argv[]){
             }
         else {
             for(int k=0;k<sub_sums[i].size();k+=2){
-                int v = mymap[sub_sums[i][k]];
-                //printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],mymap[sub_sums[i][k]]);
-                if(v){
-                    //printf("[%d] new possible map value =%d\n",mymap[sub_sums[i][k]],sub_sums[i][k+1]);
-                    mymap[sub_sums[i][k]]=min(v,sub_sums[i][k+1]);
+                //int v = mymap[sub_sums[i][k]];
+                int v = val[sub_sums[i][k]];
+
+                //printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],val[sub_sums[i][k]]);
+                if(v!=0){
+                    //printf("[%d] new possible map value =%d\n",val[sub_sums[i][k]],sub_sums[i][k+1]);
+                    val[sub_sums[i][k]]=min(v,sub_sums[i][k+1]);
                     // mymap.replace(v,min(v,sub_sums[i][k+1]));
                 }
                 else{
-                    mymap[sub_sums[i][k]]=sub_sums[i][k+1];
+                    val[sub_sums[i][k]]=sub_sums[i][k+1];
                 }
                 
             }
