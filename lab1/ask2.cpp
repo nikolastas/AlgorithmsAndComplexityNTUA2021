@@ -51,12 +51,13 @@ int main(int argc, char *argv[]){
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
     // auto start = std::chrono::high_resolution_clock::now();
-    int n, k;
-    int sum=0;
-    int p=0;
+    int n;
+    long int k;
+    long int sum=0;
+    
     // int temp_k;
     // int temp_sum=0;
-    int result=999999;
+    int result=999999999;
     //tuple<int,int> mytuple;
     // int temp_result=0;
 
@@ -67,54 +68,74 @@ int main(int argc, char *argv[]){
     
     // myfile>>n>>k;
     cin>>n>>k;
-    vector<int> arr(n+1);
+    vector< long int> arr(n+1);
     
     for(int i=0;i<n;i++){
         //scanf("%d",&arr[i]);
         // myfile>>arr[i];
+        
         cin>>arr[i];
+        
     }
     
     // auto after_reading = std::chrono::high_resolution_clock::now();
-    vector<vector<int>> sub_sums(2*n+1,vector<int>());
+    vector<vector<long int>> sub_sums(2*n+1,vector<long int>());
     // unordered_map<int,int> mymap;
     
-    int *val ;
+    long int *val ;
+    int *thesi;
     
-    size_t size=sizeof(int)*(k+1);
-    val = (int *) malloc(size);
-    
+    size_t size=sizeof(long long int)*(k+1);
+    size_t size_thesi=sizeof(int )*(k+1);
+    val = (long int *) malloc(size);
+    thesi=(int*)malloc(size_thesi);
     //memset(val,0,(k+1)*sizeof(int));
     for(int i=0;i<=k;i++){
         val[i]=0;
+        thesi[i]=0;
     }
     
     // mymap.reserve(k); // RESERVING SPACE BEFOREHAND
     // mymap.max_load_factor(0.25);
-
+    vector<long int> res;
     bool check_for_1_element=false;
     
     for(int i=0;i<n;i++){
         sum=0;
         //temp_result=999999;
         for(int j=i;j<n;j++){
+            if((j-i+1)<0){
+                printf("found bad value\n");
+            }
             if(sum+arr[j]<=k){
                 sum+=arr[j];
-            if(sum==k && j==i){
-                result=1;
-                check_for_1_element=true;
-                break;
-            }
-            sub_sums[i].push_back(sum);
-            sub_sums[i].push_back(j-i+1);
-            // list1.push_front(sum);
-            // t++;
-            
-            if(val[k-sum]!=0){
-                //printf("searching for %d and found %d",k-sum,)
-                result=min(result,(val[k-sum]+j-i+1));
-                //printf("sum is %d and i=%d and j=%d ,new result value=%d+%d\n",sum,i,j,result,j-i+1);
-            }
+                if(sum==k && j==i){
+                    result=1;
+                    check_for_1_element=true;
+                    break;
+                }
+                sub_sums[i].push_back(sum);
+                sub_sums[i].push_back(j);
+                // list1.push_front(sum);
+                // t++;
+                
+                if(val[k-sum]!=0 && ((thesi[k-sum]<i) )){
+                    // printf("searching for %ld and found %ld\n",k-sum,val[k-sum]);
+                    //printf("i got in for i=%d\n",i);
+                    
+                    //result=min(result,(val[k-sum]+j-i+1));
+                    long int tmp=(val[k-sum]+j-i+1);
+                    if(result>tmp && tmp>0 ){
+                        result=tmp;
+                       // printf("i DID change %d\n",result);
+
+                    }
+                    else{
+                       //printf("i didnt change %d\n",result);
+                    }
+                    res.push_back(result);
+                    // printf("sum is %ld and i=%d and j=%d ,new result value=%ld+%d\n",sum,i,j,val[k-sum],j-i+1);
+                }
             
 
             }
@@ -130,34 +151,42 @@ int main(int argc, char *argv[]){
                 break;
             }
         else {
-            for(int k=0;k<sub_sums[i].size();k+=2){
+            int g=k;
+            for(long int k=0;k<sub_sums[i].size();k=k+2){
+                
                 //int v = mymap[sub_sums[i][k]];
-                int v = val[sub_sums[i][k]];
-
-                //printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],val[sub_sums[i][k]]);
-                if(v!=0){
-                    //printf("[%d] new possible map value =%d\n",val[sub_sums[i][k]],sub_sums[i][k+1]);
-                    val[sub_sums[i][k]]=min(v,sub_sums[i][k+1]);
+                long int v = val[sub_sums[i][k]];
+                long int len=sub_sums[i][k+1]-i+1;
+                
+            //    printf("new map insert for i=%d sum=%d map=%d\n",i,sub_sums[i][k],val[sub_sums[i][k]]);
+                if(v>len || v==0){
+                    // printf("[%d] new possible map value =%d\n",val[sub_sums[i][k]],sub_sums[i][k+1]);
+                    val[sub_sums[i][k]]=len;
+                    thesi[sub_sums[i][k]]=sub_sums[i][k+1];
                     // mymap.replace(v,min(v,sub_sums[i][k+1]));
                 }
-                else{
-                    val[sub_sums[i][k]]=sub_sums[i][k+1];
-                }
+                
                 
             }
         }
     }
     // auto pref = std::chrono::high_resolution_clock::now();
+    // unordered_map<int,bool> uniq;
+    // for(long int i=0;i<res.size();i++){
+    //     // printf("result [%ld] = %ld\n",i,res[i]);
+    //     if(!(uniq[res[i]])){
+    //         printf("uniq    result [%ld] = %ld\n",i,res[i]);
+    //         uniq[res[i]]=true;
+    //     }
+        
+    // }
     
         
         
-        
-            
-        
-        
-    if(result==999999){
+    if(result==999999999){
         result=-1;
     }
+    
     cout<<result<<endl;
     // auto end = std::chrono::high_resolution_clock::now();
     // auto duration_pref=std::chrono::duration_cast<std::chrono::milliseconds>(pref - start);
