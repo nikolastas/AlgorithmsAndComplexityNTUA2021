@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
     
     int *val ;
     
-    size_t size=sizeof(int)*k;
+    size_t size=sizeof(int)*(k+1);
     val = (int *) malloc(size);
     
     //memset(val,0,(k+1)*sizeof(int));
