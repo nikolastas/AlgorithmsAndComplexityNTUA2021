@@ -93,8 +93,8 @@ int main(int argc, char *argv[]){
     i_thesi=(int*)malloc(i_size_thesi);
     //memset(val,0,(k+1)*sizeof(int));
     for(int i=0;i<=k;i++){
-        val[i]=0;
-        thesi[i]=-1;
+        val[i]=1000000;
+        thesi[i]=1000000;
     }
     
     // mymap.reserve(k); // RESERVING SPACE BEFOREHAND
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]){
     vector<long int> res;
     bool check_for_1_element=false;
     
-    for(int i=0;i<n;i++){
+    for(int i=0;i<n; i++){
         sum=0;
         //temp_result=999999;
         for(int j=i;j<n;j++){
@@ -113,21 +113,26 @@ int main(int argc, char *argv[]){
 
 
 
-                
+                printf("[%d,%d] sum=%ld : ",i,j,sum);
                 long int v = val[sum];
                 long int len=j-i+1;
                 long int th=thesi[sum];
-                if((v>len || v==0 )&& th<i){
+                if(((v>=len )|| v==1000000  )){
+                    printf(" sum got in:%ld th=%d |",v,thesi[sum]);
                     val[sum]=j-i+1;
-                    thesi[sum]=j;
+                    thesi[sum]=i;
                 }
                 // sub_sums[i].push_back(sum);
                 // sub_sums[i].push_back(j);
                 // sub_sums[i].push_back(i);
                 // list1.push_front(sum);
                 // t++;
-                // printf("[%d,%d] sum=%ld\n",i,j,sum);
+                if(thesi[k-sum]<i){
+                    
+                
+                
                 if(sum==k){
+                    // printf("sum is same as k\n");
                     if(j==i){
                         result=1;
                         check_for_1_element=true;
@@ -139,26 +144,24 @@ int main(int argc, char *argv[]){
                         }
                     }
                 }
-                else if(val[k-sum]!=0  ){
-                    //  printf("[%d]searching for %ld and found %ld\n",i,k-sum,val[k-sum]);
-                    // printf("i got in for i=%d\n",i);
+                if(val[k-sum]!=1000000  ){
+                     printf("searching for %ld and found %ld %d\n",k-sum,val[k-sum], thesi[k-sum]);
                     
-                    //result=min(result,(val[k-sum]+j-i+1));
                     long int tmp=(val[k-sum]+j-i+1);
-                    if((result>tmp && thesi[k-sum]<i) ){
+                    if((result>tmp ) ){
                         result=tmp;
-                        // printf("i DID change %d\n",result);
+                        printf("i DID change %d\n",result);
 
                     }
                     
                     
-                    //   printf("sum is %ld and i=%d and j=%d ,new result value=%ld+%d\n",sum,i,j,val[k-sum],j-i+1);
                 }
-            
+                printf("k-sum not found! [%ld] thesi=%d\n",val[k-sum],thesi[k-sum]);
+                }
 
             }
             else  {
-                
+                i=j;
                 break;
                 
             }
@@ -168,25 +171,6 @@ int main(int argc, char *argv[]){
         if(check_for_1_element){
                 break;
             }
-        else{
-            // for(int h=0;h<sub_sums[i].size();h+=2){
-            //     long int v = val[sub_sums[i][h]];
-            //     long int th=thesi[sub_sums[i][h]];
-            //     long int len=sub_sums[i][h+1]-i+1;
-            //     if(((v>len ) || v==0) && th<=i){
-            //         val[sub_sums[i][h]]=len;
-            //         thesi[sub_sums[i][h]]=sub_sums[i][h+1];
-            //         // i_thesi[sub_sums[i][h]]=sub_sums[i][h+2];
-            //     }
-            //     // else{
-            //     //     sub_sums[i+1].push_back(sub_sums[i][h]);
-            //     //     sub_sums[i+1].push_back(sub_sums[i][h+1]);
-            //     //     sub_sums[i+1].push_back(sub_sums[i][h+2]);
-            //     // }
-                
-            // }
-            
-        }
         
     
     }
