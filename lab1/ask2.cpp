@@ -109,11 +109,7 @@ int main(int argc, char *argv[]){
             
             if(sum+arr[j]<=k){
                 sum+=arr[j];
-                if(sum==k && j==i){
-                    result=1;
-                    check_for_1_element=true;
-                    break;
-                }
+                
 
 
 
@@ -125,22 +121,32 @@ int main(int argc, char *argv[]){
                 // list1.push_front(sum);
                 // t++;
                 // printf("[%d,%d] sum=%ld\n",i,j,sum);
-                if(val[k-sum]!=0 && ((thesi[k-sum]<i) )){
-                    //  printf("searching for %ld and found %ld\n",k-sum,val[k-sum]);
+                if(sum==k){
+                    if(j==i){
+                        result=1;
+                        check_for_1_element=true;
+                        break;
+                    }
+                    else{
+                        if(j-i+1<result){
+                            result=j-i+1;
+                        }
+                    }
+                }
+                else if(val[k-sum]!=0  ){
+                    //  printf("[%d]searching for %ld and found %ld\n",i,k-sum,val[k-sum]);
                     // printf("i got in for i=%d\n",i);
                     
                     //result=min(result,(val[k-sum]+j-i+1));
                     long int tmp=(val[k-sum]+j-i+1);
-                    if(result>tmp  ){
+                    if((result>tmp && thesi[k-sum]<i) ){
                         result=tmp;
                         // printf("i DID change %d\n",result);
 
                     }
-                    else{
-                       //printf("i didnt change %d\n",result);
-                    }
-                    res.push_back(result);
-                    //  printf("sum is %ld and i=%d and j=%d ,new result value=%ld+%d\n",sum,i,j,val[k-sum],j-i+1);
+                    
+                    
+                    //   printf("sum is %ld and i=%d and j=%d ,new result value=%ld+%d\n",sum,i,j,val[k-sum],j-i+1);
                 }
             
 
@@ -161,7 +167,7 @@ int main(int argc, char *argv[]){
                 long int v = val[sub_sums[i][h]];
                 long int th=thesi[sub_sums[i][h]];
                 long int len=sub_sums[i][h+1]-i+1;
-                if((v>len ) || v==0){
+                if(((v>len ) || v==0) && th<=i){
                     val[sub_sums[i][h]]=len;
                     thesi[sub_sums[i][h]]=sub_sums[i][h+1];
                     // i_thesi[sub_sums[i][h]]=sub_sums[i][h+2];
@@ -181,7 +187,7 @@ int main(int argc, char *argv[]){
     if(result==999999999){
         result=-1;
     }
-    
+
     cout<<result<<endl;
     // auto end = std::chrono::high_resolution_clock::now();
     // auto duration_pref=std::chrono::duration_cast<std::chrono::milliseconds>(pref - start);
