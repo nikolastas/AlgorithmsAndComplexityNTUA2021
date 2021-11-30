@@ -114,9 +114,15 @@ int main(int argc, char *argv[]){
 
 
                 
-                
-                sub_sums[i].push_back(sum);
-                sub_sums[i].push_back(j);
+                long int v = val[sum];
+                long int len=j-i+1;
+                long int th=thesi[sum];
+                if((v>len || v==0 )&& th<i){
+                    val[sum]=j-i+1;
+                    thesi[sum]=j;
+                }
+                // sub_sums[i].push_back(sum);
+                // sub_sums[i].push_back(j);
                 // sub_sums[i].push_back(i);
                 // list1.push_front(sum);
                 // t++;
@@ -163,22 +169,22 @@ int main(int argc, char *argv[]){
                 break;
             }
         else{
-            for(int h=0;h<sub_sums[i].size();h+=2){
-                long int v = val[sub_sums[i][h]];
-                long int th=thesi[sub_sums[i][h]];
-                long int len=sub_sums[i][h+1]-i+1;
-                if(((v>len ) || v==0) && th<=i){
-                    val[sub_sums[i][h]]=len;
-                    thesi[sub_sums[i][h]]=sub_sums[i][h+1];
-                    // i_thesi[sub_sums[i][h]]=sub_sums[i][h+2];
-                }
-                // else{
-                //     sub_sums[i+1].push_back(sub_sums[i][h]);
-                //     sub_sums[i+1].push_back(sub_sums[i][h+1]);
-                //     sub_sums[i+1].push_back(sub_sums[i][h+2]);
-                // }
+            // for(int h=0;h<sub_sums[i].size();h+=2){
+            //     long int v = val[sub_sums[i][h]];
+            //     long int th=thesi[sub_sums[i][h]];
+            //     long int len=sub_sums[i][h+1]-i+1;
+            //     if(((v>len ) || v==0) && th<=i){
+            //         val[sub_sums[i][h]]=len;
+            //         thesi[sub_sums[i][h]]=sub_sums[i][h+1];
+            //         // i_thesi[sub_sums[i][h]]=sub_sums[i][h+2];
+            //     }
+            //     // else{
+            //     //     sub_sums[i+1].push_back(sub_sums[i][h]);
+            //     //     sub_sums[i+1].push_back(sub_sums[i][h+1]);
+            //     //     sub_sums[i+1].push_back(sub_sums[i][h+2]);
+            //     // }
                 
-            }
+            // }
             
         }
         
