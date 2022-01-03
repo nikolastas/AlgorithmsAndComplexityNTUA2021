@@ -64,12 +64,13 @@ void printvector(vector<int> pair){
                 }  
     cout<<endl;  
     } 
-int LongestIncreasingSubsequenceLength(std::vector<int>& v, size_t s, vector<int> & tail, std::vector<int>& lis)
+int LongestIncreasingSubsequenceLength(std::vector<int>& v, size_t s, vector<int> & tail, std::vector<int>& lis, int K, vector<int> lds)
 {
     if (v.size() == 0)
         return 0;
     bool print =false;
     int pos=1;
+    int result=0;
     // std::vector<int> tail(v.size(), 0);
     int length = 1; // always points empty slot in tail
  
@@ -87,16 +88,16 @@ int LongestIncreasingSubsequenceLength(std::vector<int>& v, size_t s, vector<int
         }
         
         // new smallest value
-        if (v[i] < tail[0]){
-            tail[0] = v[i];
+        if (v[i]+K < tail[0]){
+            tail[0] = v[i]+K;
             index[0]=i;
             // k =   CeilIndex(tail, -1, length - 1, v[i]);
             lis[pos] = 1;
         }
             
         // v[i] extends largest subsequence
-        else if (v[i] > tail[length - 1]){
-            tail[length] = v[i];
+        else if (v[i]+K > tail[length - 1]){
+            tail[length] = v[i]+K;
             index[length] = i;
             lis[pos] = length+1;
             length++;
@@ -109,11 +110,12 @@ int LongestIncreasingSubsequenceLength(std::vector<int>& v, size_t s, vector<int
         // appeared in one of LIS, identify the location
         // and replace it)
         else{
-            k = CeilIndex(tail, -1, length - 1, v[i]);
-            tail[k] = v[i];
+            k = CeilIndex(tail, -1, length - 1, v[i]+ K);
+            
+            tail[k] = v[i]+K;
             index[k]=i;
             lis[pos] = lis[index[k-1]]+1;
-
+            result = max(result, lis[pos]+lds[i]);
         }
         if(print){
             printf("lis= \n");
@@ -124,7 +126,7 @@ int LongestIncreasingSubsequenceLength(std::vector<int>& v, size_t s, vector<int
         pos++;
     }
  
-    return length;
+    return result;
 }
  
 
@@ -151,7 +153,7 @@ int LongestDecreasingSubsequenceLengthFromLastToFirst(std::vector<int>& v, size_
     size_t j;
     int pos=1;
     for (size_t i = 2; i <= s+1; i++) {
-        j = v.size()-i;
+        j = s+1-i;
         
         if(print){
             printf("[j=%ld] number= %d \n", j, v[j]);
@@ -232,61 +234,27 @@ int m;
     vector<int> ans1 (initial_state.size(), 0);
     vector<int> ans2 (initial_state.size(), 0);
     vector<int> index (initial_state.size(), 0);
+    
+    
+    
     if(print){
-    printf("lis = ");
-    printvector(lis);
-    printf("lds = ");
+    
+    n2 = LongestDecreasingSubsequenceLengthFromLastToFirst(initial_state,initial_state.size(),lds, ans2, index);
+    n1 = LongestIncreasingSubsequenceLength(initial_state, initial_state.size(), lis, ans1, K, ans2);
+    cout << "Length of Longest Decreasing Subsequence is "<< n2 << '\n';
+    
+    
+    printf("lds= \n");
     printvector(lds);
-    cout<<"the size is "<<lis.size()<<endl;
-    }
+    printf("ans2= \n");
+    printvector(ans2);
+    printf("lis= \n");
+    printvector(lis);
+    printf("ans1= \n");
+    printvector(ans1);
+    printf("result=%d \n", n1);
     
-    
-    if(print){cout << "Length of Longest Decreasing Subsequence is "
-              << LongestDecreasingSubsequenceLengthFromLastToFirst(initial_state_plusK,initial_state.size(),lds, ans2, index) << '\n';
-    cout<< "done \n";
-    if(print){
-        printf("lds= \n");
-        printvector(lds);
-        printf("ans2= \n");
-        printvector(ans2);
-    }
-     n1 = LongestIncreasingSubsequenceLength(initial_state, initial_state.size(), lis, ans1);
-     n2 = LongestDecreasingSubsequenceLengthFromLastToFirst(initial_state_plusK,initial_state.size(),lds, ans2, index);
-    cout<<"--------------------------------------------"<<endl;
-    cout << "Length of Longest Increasing Subsequence is "
-            << LongestIncreasingSubsequenceLength(initial_state, initial_state.size(), lis, ans1) << '\n';
-    cout<< "done \n";}
-    else{
-     n1 = LongestIncreasingSubsequenceLength(initial_state, initial_state.size(), lis, ans1);
-     n2 = LongestDecreasingSubsequenceLengthFromLastToFirst(initial_state_plusK,initial_state.size(),lds, ans2, index);
-    
-    }
-    if(print)
-    {
-        printvector(lis);
-        printvector(ans1);
-    }   
-    int result=0; 
-    int l=0;
-    int h=0;
-    for(size_t i=0; i<initial_state.size();i++){
-    
-        l=CeilIndex2(lds, -1, n2-1, initial_state[i]);
-        h=CeilIndex(lis, -1, n1-1, initial_state[i]);
-        
-        if(index[l] > i){
-            if(print){
-                printf("[i=%ld]{init=%d} lis= %d l=%d LDS=%d result=%d \n", i,initial_state[i] ,ans1[i], l , lds[l], result );
-            }
-            result=max(result, ans1[i]+l);
-        }
-        else{
-            l=0;
-        }
-        
-    }
-    cout<<result<<endl;
-
     
 
+}
 }
