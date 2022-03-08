@@ -4,20 +4,16 @@
 
 #define dk_max 10001
 #define sj_max 1000000001
-#define mp std::make_pair
-#define ulong unsigned long
-#define iPair std::pair<ulong,int>
 
-int N, dk = dk_max;
-ulong Q;
-std::vector<ulong> dist, query(dk_max, -1);
-std::set<iPair> waiting_room;
+using namespace std;
 
-void Dijkstra() {
+
+
+void Dijkstra(vector<unsigned long> &dist, int &dk,  vector<unsigned long> &query, set<pair<unsigned long,int>> &waiting_room) {
     while(!waiting_room.empty()) {
 
-        iPair head = *waiting_room.begin();
-        ulong cur = head.second;
+        pair<unsigned long,int> head = *waiting_room.begin();
+        unsigned long cur = head.second;
         int d_sum = head.first;
         waiting_room.erase(head);
 
@@ -26,18 +22,22 @@ void Dijkstra() {
             int new_dist = d_sum + di;
 
             if(new_dist < query[new_node] || query[new_node] == -1) {
-                waiting_room.erase( mp( query[new_node], new_node ) );
+                waiting_room.erase( make_pair( query[new_node], new_node ) );
                 query[new_node] = new_dist;
-                waiting_room.insert( mp( query[new_node], new_node ) );
+                waiting_room.insert( make_pair( query[new_node], new_node ) );
             }
         }
     }
 }
 
 int main() {
+    int N, dk = dk_max;
+    unsigned long Q;
+    vector<unsigned long> dist, query(dk_max, -1);
+    set<pair<unsigned long,int>> waiting_room;
     scanf("%d %lu", &N, &Q);
     for(int i = 1; i <= N; i++) {
-        ulong di;
+        unsigned long di;
         scanf("%lu", &di);
         dist.push_back(di);
         if(di < dk)
@@ -45,11 +45,11 @@ int main() {
     }
 
     query[0] = 0;
-    waiting_room.insert( mp(query[0],0) );
-    Dijkstra();
+    waiting_room.insert( make_pair(query[0],0) );
+    Dijkstra(dist, dk, query, waiting_room);
     
     for(int i = 0; i < Q; i++) {
-        ulong q;
+        unsigned long q;
         scanf("%lu", &q);
         (query[q % dk] > q) ? printf("NO\n") : printf("YES\n");
     }
